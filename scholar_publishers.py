@@ -74,10 +74,11 @@ class ieee(publisher):
         
 class ScienceDirect(publisher):
     # Elsevier, including composite science and tech, polymer
-    # Last tested: May 18, 2016
+    # Last tested: May 18, 2016  ### update 03/09/17 -Yixing; new publushed journal has different structure
     def get_title_abstract(self):
         h1 = self.soup.findAll('h1')
         title = re.split('>|</h1>', str(h1[0]))[1]
+
         div_p_tags = self.soup.findAll(['div', 'p'])
         ind = 0
         for div in div_p_tags:
@@ -86,6 +87,12 @@ class ScienceDirect(publisher):
                 break
             ind += 1
         abstract = re.split( '<p id="">|</p>', str(div_p_tags[abstract_ind]))[1]
+        if len(abstract)==0:
+            abstract = re.split( '<p id="sp005">|</p>', str(div_p_tags[abstract_ind]))[1]
+        if len(abstract)==0:
+            abstract = re.split( '<p id="sp0005">|</p>', str(div_p_tags[abstract_ind]))[1]
+        if len(abstract)==0:
+            abstract = re.split( '<p id="abspara0010">|</p>', str(div_p_tags[abstract_ind]))[1]
         return title, abstract
     
     def get_img_url(self):
@@ -155,11 +162,11 @@ class aip(publisher):
         for div in div_tags:
             if div.has_key('class') and div['class'][0]=='hlFld-Title':
                 title = re.split('<h2>|</h2>', str(div))[1]
-                print title
+                print 'hahaha',title
                 #print 'title is',title
                 break
         for div in div_tags:
-            if div.has_key('class') and div['class'][0]=='abstractSection':
+            if div.has_key('class') and div['class'][0]=='NLM_paragraph':
                 abstract = re.split('<div class="NLM_paragraph">|</div>', str(div))[1]
                 print abstract
                 #print 'abstract is',abstract

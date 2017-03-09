@@ -28,6 +28,7 @@ def crawl(query_key_words, num_query_results):
     
     list_query_result = {}
     url=[]
+    paper_url=[]
     # Determine publisher from URL
     # Parse DOI or article number from returned url from google scholar search
     for article in articles:
@@ -120,7 +121,7 @@ def crawl(query_key_words, num_query_results):
                 print len(img_list)
                 print img_list
                 # Download all images to paper folder
-                crawler.download_img(img_list, paper_dir)
+                #crawler.download_img(img_list, paper_dir)
                 # Get title and abstract of the paper and write to the paper folder
                 title, abstract = crawler.get_title_abstract()
                 title_file = open(paper_dir+'title.txt', "w")
@@ -215,35 +216,40 @@ def crawl(query_key_words, num_query_results):
                 # Close browser
                 crawler.close_browser()
 
-    return 'NO link found' if len(url)==0 else url 
+    return 'NO link found' if len(paper_url)==0 else paper_url 
 
 
 if __name__=='__main__':
-    doi_df = pd.read_csv('doi_list1.csv', header=None)
-    urllist=[]
-    doilist=[]
-    for i in range(doi_df.shape[0]):
-        query_key_words = doi_df.iloc[i][0]
-        doilist.append(query_key_words)
-        print query_key_words
-    # query_key_words = 'polymer nanodielectric'
-        num_query_results = 1 
-        timestop=random.random()*30+30
-        print "The stopping time is",timestop
+    # doi_df = pd.read_csv('doi_list1.csv', header=None)
+    # urllist=[]
+    # doilist=[]
+    # for i in range(doi_df.shape[0]):
+    #     query_key_words = doi_df.iloc[i][0]
+    #     doilist.append(query_key_words)
+    #     print query_key_words
+    # # query_key_words = 'polymer nanodielectric'
+    #     num_query_results = 1 
+    #     timestop=random.random()*30+30
+    #     print "The stopping time is",timestop
 
-        time.sleep(timestop)
-        url=crawl(query_key_words, num_query_results)
-        print url
-        urllist.append(url)
-    ##write url to a csvfile
-    with open('url.csv','wb') as f:
-        writer=csv.writer(f)
-        writer.writerows(izip(doilist,urllist))
+    #     time.sleep(timestop)
+    #     try:
+    #         url=crawl(query_key_words, num_query_results)
+    #     except:
+    #         print 'Error happened on this url, please check the structure of the web'
+    #         url='error'
+    #     print url
+    #     urllist.append(url)
+    # ##write url to a csvfile
+    # with open('url.csv','wb') as f:
+    #     writer=csv.writer(f)
+    #     writer.writerows(izip(doilist,urllist))
 
 
     
-    # query_key_words ='10.1016/j.compscitech.2007.05.021'
-    # num_query_results = 1
+    #query_key_words ='10.1063/1.1529085'
+    query_key_words="10.1016/j.compscitech.2013.02.021"
+    num_query_results = 1
 
-    # url=crawl(query_key_words, num_query_results)
-    # print url
+    url=crawl(query_key_words, num_query_results)
+    print url
