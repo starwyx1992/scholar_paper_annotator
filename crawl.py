@@ -248,7 +248,7 @@ if __name__=='__main__':
 
     
     #query_key_words ='10.1063/1.1529085'
-    query_key_words="10.1016/j.compscitech.2013.02.021"
+    query_key_words="Dielectric properties of epoxy nanocomposites"
     num_query_results = 1
 
     url=crawl(query_key_words, num_query_results)

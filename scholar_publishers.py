@@ -45,19 +45,34 @@ class ieee(publisher):
         if len(abstracts) == 1:
             abstract = str(abstracts[0])
         print 'abstract:', abstract
-        abstract = abstract.strip('<div class="abstract-text ng-binding" ng-bind-html="::vm.details.abstract"> </')
-
-        h1s = self.soup.findAll(attrs={"class": 'document-title'})
-        if len(h1s) == 1:
-            title = str(h1s[0])
-        title = title.strip('<h1 class="document-title">')
-        title = title.strip()
-        title = title.strip('<span class="ng-binding" mathjax-bind="" ng-bind-html="vm.displayDocTitle">')
-        title = title.strip('</')
-        title = title.strip()
-        title = title.strip('<!-- ngIf: vm.titleContainsRedline -->')
-        title = title.strip()
-        title = title.strip('</span>')
+        abstract = abstract.strip('<div class="abstract-text ng-binding" ng-bind-html="::vm.details.abstract">')
+        abstract = abstract.strip('</')
+        print abstract
+        divs = self.soup.findAll(['div'])
+        for div in divs:
+            if div.has_key('class') and div['class'][0]=='document-title-container':
+                title = re.split('<h1 class="document-title">|<!-- ngIf: vm.titleContainsRedline -->', str(div))[1]
+                break
+        # h1s = self.soup.findAll(attrs={"class": 'document-title'})
+        # if len(h1s) == 1:
+        #     title = str(h1s[0])
+        # print title
+        # title = title.strip('<h1 class="document-title">')
+        # print title
+        # title = title.strip()
+        # print title
+        # title = title.strip('</')
+        # print title
+        # title = title.strip()
+        # print title
+        # title = title.strip('<!-- ngIf: vm.titleContainsRedline -->')
+        # print title
+        # title = title.strip()
+        # print title
+        # title = title.strip('</span>')
+        # print title
+        # title = title.strip('<span class="ng-binding" mathjax-bind="" ng-bind-html="vm.displayDocTitle">')
+        # print title
 
         # raise TypeError
         body = self.soup.findAll(attrs = {"class": "section"})
