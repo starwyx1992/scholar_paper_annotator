@@ -14,7 +14,7 @@ class publisher():
         self.browser.get(PAPER_URL)
         source = self.browser.page_source
         warnings.filterwarnings('ignore')
-        self.soup = Soup(source)
+        self.soup = Soup(source,'lxml')
 
     def close_browser(self):
         self.browser.close()
@@ -53,37 +53,17 @@ class ieee(publisher):
             if div.has_key('class') and div['class'][0]=='document-title-container':
                 title = re.split('<h1 class="document-title">|<!-- ngIf: vm.titleContainsRedline -->', str(div))[1]
                 break
-        # h1s = self.soup.findAll(attrs={"class": 'document-title'})
-        # if len(h1s) == 1:
-        #     title = str(h1s[0])
-        # print title
-        # title = title.strip('<h1 class="document-title">')
-        # print title
-        # title = title.strip()
-        # print title
-        # title = title.strip('</')
-        # print title
-        # title = title.strip()
-        # print title
-        # title = title.strip('<!-- ngIf: vm.titleContainsRedline -->')
-        # print title
-        # title = title.strip()
-        # print title
-        # title = title.strip('</span>')
-        # print title
-        # title = title.strip('<span class="ng-binding" mathjax-bind="" ng-bind-html="vm.displayDocTitle">')
-        # print title
-
-        # raise TypeError
-        body = self.soup.findAll(attrs = {"class": "section"})
-        print 'length of full body', len(body)
         return title, abstract
 
-    def get_main_body(self):
-        divs = self.soup.findAll(['div'])
-        ps = self.soup.findAll(['p'])
-        print 'length of ps', len(ps)
-        print len(ps[0]), len(ps[1])
+    def get_fullbody(self):
+        div_tags=self.soup.findAll("div")
+        fullbody=""
+        print len(div_tags)
+        for div in div_tags:
+                #if div.has_key('id') and div['id']=='BodyWrapper':
+                    pragraph = str(div)
+                    fullbody =fullbody+pragraph+"\n"
+        return fullbody
         # print 'length of divs', len(divs)
 
         
@@ -109,7 +89,14 @@ class ScienceDirect(publisher):
         if len(abstract)==0:
             abstract = re.split( '<p id="abspara0010">|</p>', str(div_p_tags[abstract_ind]))[1]
         return title, abstract
-    
+    def get_fullbody(self):
+        p_tags=self.soup.findAll('p')
+        fullbody = ""
+        for p in p_tags:
+            if p.has_key('class') and p['class'][0] == 'svArticle':
+                pragraph = re.split('<p class="svArticle section clear" id="">|</p>', str(p))[1]
+                fullbody =fullbody+pragraph+"\n"
+        return fullbody
     def get_img_url(self):
         a_tags = self.soup.findAll('a')
         img_url_list = []
@@ -177,7 +164,6 @@ class aip(publisher):
         for div in div_tags:
             if div.has_key('class') and div['class'][0]=='hlFld-Title':
                 title = re.split('<h2>|</h2>', str(div))[1]
-                print 'hahaha',title
                 #print 'title is',title
                 break
         for div in div_tags:
@@ -187,7 +173,7 @@ class aip(publisher):
                 #print 'abstract is',abstract
                 break
         return title, abstract        
-
+    def get_fullbody(self) 
 class rsc(publisher):
     # RSC. 06/08/2016
     def get_title_abstract(self):

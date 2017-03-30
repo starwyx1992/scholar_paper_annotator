@@ -91,13 +91,16 @@ def crawl(query_key_words, num_query_results):
                 title, abstract = crawler.get_title_abstract()
 
                 # 030317 add main body
-                main_body_text = crawler.get_main_body()
+                fullbody = crawler.get_fullbody()
 
                 title_file = open(paper_dir+'title.txt', "w")
                 title_file.write(title)
                 title_file.close()
                 abstract_file = open(paper_dir+'abstract.txt', "w")
                 abstract_file.write(abstract)
+                abstract_file.close()
+                abstract_file = open(paper_dir+'fullbody.txt', "w")
+                abstract_file.write(fullbody)
                 abstract_file.close()
                 # Close browser
                 crawler.close_browser()
@@ -124,11 +127,15 @@ def crawl(query_key_words, num_query_results):
                 #crawler.download_img(img_list, paper_dir)
                 # Get title and abstract of the paper and write to the paper folder
                 title, abstract = crawler.get_title_abstract()
+                fullbody = crawler.get_fullbody()
                 title_file = open(paper_dir+'title.txt', "w")
                 title_file.write(title)
                 title_file.close()
                 abstract_file = open(paper_dir+'abstract.txt', "w")
                 abstract_file.write(abstract)
+                abstract_file.close()
+                abstract_file = open(paper_dir+'fullbody.txt', "w")
+                abstract_file.write(fullbody)
                 abstract_file.close()
                 # Close browser
                 crawler.close_browser()
@@ -247,8 +254,7 @@ if __name__=='__main__':
 
 
     
-    #query_key_words ='10.1063/1.1529085'
-    query_key_words="Dielectric properties of epoxy nanocomposites"
+    query_key_words ='10.1109/T-DEI.2008.4446732'
     num_query_results = 1
 
     url=crawl(query_key_words, num_query_results)
